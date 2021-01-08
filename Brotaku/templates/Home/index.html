@@ -1,0 +1,527 @@
+{% extends 'base.html' %}
+{% block content %}
+<title>Brotaku</title>
+<style>
+.topMarg {
+  margin:0px;
+  padding:0px;
+  margin-top:100px;
+}
+.no-margin {
+  padding:0px;
+  margin:0px;
+}
+.featured-image{
+  height:400px;
+  width: 100%;
+}
+.cardImage{
+  height:200px;
+  width:auto;
+}
+.carousel-control-prev-icon,
+.carousel-control-next-icon {
+  height: 45px;
+  width: 45px;
+  outline: black;
+  background-size: 100%, 100%;
+  border-radius: 50%;
+  border: 1px solid blue;
+  background-image: none;
+}
+
+.carousel-control-next-icon:after
+{
+  content: '>';
+  font-size: 25px;
+  color: blue;
+}
+
+.carousel-control-prev-icon:after {
+  content: '<';
+  font-size: 25px;
+  color: blue;
+}
+.carousel-indicators li {
+  background-color: blue;
+}
+footer{
+  positioning: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color:black;
+  clear:both;
+}
+html, body {
+  margin:0;
+  padding:0;
+  overflow-x:hidden;
+}
+footer{
+  overflow:hidden;
+}
+.inline p{
+  display:inline;
+}
+.inline{
+  display:inline;
+}
+.white {
+  background:white;
+}
+.container {
+
+}
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Anton', sans-serif;
+  color: rgb(147,39,143);
+}
+p {
+  font-family: 'Roboto', sans-serif;
+}
+.title {
+  color: black;
+}
+.title {
+  font-size: 1.5em;
+}
+.nav-item{
+  font-size:1.35em;
+}
+.nav-item a{
+  color:white;
+  font-family:'Anton', sans-serif;
+  font-style:bold;
+  margin-right:15px;
+}
+.nav-item a.dropdown-item{
+  color:black;
+  font-family:roboto;
+}
+  </style>
+</head>
+<body>
+{% block navbar %}
+  {% include 'nav.html' %}
+{% endblock %}
+  <div class="row">
+  <!--Empty Left Column To Adjust Content Towards Center, put ad here-->
+  <div class="col-md-2" style="border-right: 1px solid grey;">
+  </div>
+  <!--End Left Column-->
+  <!--Center Column For Content-->
+  <div class="col-md-8 white">
+    <div class="row" style="background-color:grey;">
+    <div class="container" style="padding:0;">
+      <!-- featured -->
+      <div class="mb-4 mx-auto topMarg">
+        <!--Card-->
+        <div class="card text-center" style="border:0;width:100%;">
+          {% if Featured.type == "Blog" %}
+          <a href="{% url 'blogpost' Featured.slug %}">
+          {% elif Featured.type == "Vlog" %}
+          <a href="{% url 'vlogpost' Featured.slug %}">
+          {% endif %}
+            <img class="card-img-top featured-image" src="{{Featured.image.url}}" alt="" style="width:100%;"/>
+            <div class="card-body" style="padding:0px;">
+              <div class="container">
+                <div class="container">
+                  <h3 class="title">{{Featured.title}}</h3>
+                  <span class="card-text inline" style="display:inline;">{{Featured.body | striptags | slice:":400"}}</span>
+                  <p class="inline">...</p>
+                  <p class="card-text text-muted">By {{Featured.author}} on {{Featured.created | date:'F j, Y'}}</p>
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        <!--End Card-->
+      </div>
+      <!--End Featured-->
+      </div>
+      </div>
+      {% if Posts %}
+      <div class="container mb-3 mt-3" style="padding:0;">
+          <h2 class="mb-4">RECENT</h2>
+      </div>
+        <div class="container mx-auto">
+          <div class="row">
+            <div id="recent-carousel" class="carousel slide" data-ride="carousel" style="width:100%;">
+              <ol class="carousel-indicators">
+                <li data-target="#recent-carousel" data-slide-to="0" class="active"></li>
+                <li data-target="#recent-carousel" data-slide-to="1"></li>
+                <li data-target="#recent-carousel" data-slide-to="2"></li>
+              </ol>
+              <div class="carousel-inner" style="width:100%;">
+                {% for post in Posts|slice:":3" %}
+                {% if forloop.first %}
+                    <div class="carousel-item active">
+                      <div class="row text-center">
+                {% endif %}
+                    <div class="col-4">
+                      <div class="card mb-5">
+                        {% if post.type == "Blog"%}
+                        <a href="{% url 'blogpost' post.slug %}">
+                        {% elif post.type == "Vlog" %}
+                        <a href="{% url 'vlogpost' post.slug %}">
+                        {% endif %}
+                        <img class="card-img-top" src="{{post.image.url}}" height="200px"/>
+                        <div class="card-body">
+                          <h3 class="title">{{post.title}}</h3>
+                          <p class="card-text text-muted">By {{post.author}} on {{post.created | date:'F j, Y'}}</p>
+                        </div>
+                        </a>
+                      </div>
+                    </div>
+                {% if forloop.last %}
+                  </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+                {% for post in Posts|slice:"3:6" %}
+                {% if forloop.first %}
+                    <div class="carousel-item">
+                      <div class="row text-center">
+                {% endif %}
+                    <div class="col-4">
+                      <div class="card mb-5">
+                        {% if post.type == "Blog"%}
+                        <a href="{% url 'blogpost' post.slug %}">
+                        {% elif post.type == "Vlog" %}
+                        <a href="{% url 'vlogpost' post.slug %}">
+                        {% endif %}
+                        <img class="card-img-top" src="{{post.image.url}}" height="200px"/>
+                        <div class="card-body">
+                          <h3 class="title">{{post.title}}</h3>
+                          <p class="card-text text-muted">By {{post.author}} on {{post.created | date:'F j, Y'}}</p>
+                        </div>
+                        </a>
+                      </div>
+                    </div>
+                {% if forloop.last %}
+                  </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+                {% for post in Posts|slice:"6:9" %}
+                {% if forloop.first %}
+                    <div class="carousel-item">
+                      <div class="row text-center">
+                {% endif %}
+                    <div class="col-4">
+                      <div class="card mb-5">
+                        {% if post.type == "Blog"%}
+                        <a href="{% url 'blogpost' post.slug %}">
+                        {% elif post.type == "Vlog" %}
+                        <a href="{% url 'vlogpost' post.slug %}">
+                        {% endif %}
+                        <img class="card-img-top" src="{{post.image.url}}" height="200px"/>
+                        <div class="card-body">
+                          <h3 class="title">{{post.title}}</h3>
+                          <p class="card-text text-muted">By {{post.author}} on {{post.created | date:'F j, Y'}}</p>
+                        </div>
+                        </a>
+                      </div>
+                    </div>
+                {% if forloop.last %}
+                  </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+              </div>
+              <a class="carousel-control-prev" href="#recent-carousel" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+              </a>
+              <a class="carousel-control-next" href="#recent-carousel" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+              </a>
+            </div>
+          </div>
+        </div>
+        {% endif %}
+
+        {% if Review %}
+        <div class="container mb-3 mt-3" style="padding:0;">
+            <h2 class="mb-4">REVIEWS</h2>
+        </div>
+          <div class="container mx-auto">
+            <div class="row">
+              <div id="review-carousel" class="carousel slide" data-ride="carousel" style="width:100%;">
+                <ol class="carousel-indicators">
+                  <li data-target="#review-carousel" data-slide-to="0" class="active"></li>
+                  <li data-target="#review-carousel" data-slide-to="1"></li>
+                  <li data-target="#review-carousel" data-slide-to="2"></li>
+                </ol>
+                <div class="carousel-inner" style="width:100%;">
+                  {% for post in Review|slice:":3" %}
+                  {% if forloop.first %}
+                      <div class="carousel-item active">
+                        <div class="row text-center">
+                  {% endif %}
+                      <div class="col-4">
+                        <div class="card mb-5">
+                          <a href="{% url 'reviewpost' post.slug %}">
+                          <img class="card-img-top" src="{{post.image.url}}" height="200px"/>
+                          <div class="card-body">
+                            <h3 class="title">{{post.title}}</h3>
+                            <p class="card-text text-muted">By {{post.author}} on {{post.created | date:'F j, Y'}}</p>
+                          </div>
+                          </a>
+                        </div>
+                      </div>
+                  {% if forloop.last %}
+                    </div>
+                  </div>
+                  {% endif %}
+                  {% endfor %}
+                  {% for post in Review|slice:"3:6" %}
+                  {% if forloop.first %}
+                      <div class="carousel-item">
+                        <div class="row text-center">
+                  {% endif %}
+                      <div class="col-4">
+                        <div class="card mb-5">
+                          <a href="{% url 'reviewpost' post.slug %}">
+                          <img class="card-img-top" src="{{post.image.url}}" height="200px"/>
+                          <div class="card-body">
+                            <h3 class="title">{{post.title}}</h3>
+                            <p class="card-text text-muted">By {{post.author}} on {{post.created | date:'F j, Y'}}</p>
+                          </div>
+                          </a>
+                        </div>
+                      </div>
+                  {% if forloop.last %}
+                    </div>
+                  </div>
+                  {% endif %}
+                  {% endfor %}
+                  {% for post in Review|slice:"6:9" %}
+                  {% if forloop.first %}
+                      <div class="carousel-item">
+                        <div class="row text-center">
+                  {% endif %}
+                      <div class="col-4">
+                        <div class="card mb-5">
+                          <a href="{% url 'reviewpost' post.slug %}">
+                          <img class="card-img-top" src="{{post.image.url}}" height="200px"/>
+                          <div class="card-body">
+                            <h3 class="title">{{post.title}}</h3>
+                            <p class="card-text text-muted">By {{post.author}} on {{post.created | date:'F j, Y'}}</p>
+                          </div>
+                          </a>
+                        </div>
+                      </div>
+                  {% if forloop.last %}
+                    </div>
+                  </div>
+                  {% endif %}
+                  {% endfor %}
+                </div>
+                <a class="carousel-control-prev" href="#recent-carousel" role="button" data-slide="prev">
+                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                  <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#recent-carousel" role="button" data-slide="next">
+                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                  <span class="sr-only">Next</span>
+                </a>
+              </div>
+            </div>
+          </div>
+          {% endif %}
+
+
+
+          {% if Blog %}
+          <div class="container mb-3 mt-3" style="padding:0;">
+              <h2 class="mb-4">Blog</h2>
+          </div>
+            <div class="container mx-auto">
+              <div class="row">
+                <div id="blog-carousel" class="carousel slide" data-ride="carousel" style="width:100%;">
+                  <ol class="carousel-indicators">
+                    <li data-target="#blog-carousel" data-slide-to="0" class="active"></li>
+                    <li data-target="#blog-carousel" data-slide-to="1"></li>
+                    <li data-target="#blog-carousel" data-slide-to="2"></li>
+                  </ol>
+                  <div class="carousel-inner" style="width:100%;">
+                    {% for post in Blog|slice:":3" %}
+                    {% if forloop.first %}
+                        <div class="carousel-item active">
+                          <div class="row text-center">
+                    {% endif %}
+                        <div class="col-4">
+                          <div class="card mb-5">
+                            <a href="{% url 'blogpost' post.slug %}">
+                            <img class="card-img-top" src="{{post.image.url}}" height="200px" style="width:auto; max-width:356px;"/>
+                            <div class="card-body">
+                              <h3 class="title">{{post.title}}</h3>
+                              <p class="card-text text-muted">By {{post.author}} on {{post.created | date:'F j, Y'}}</p>
+                            </div>
+                            </a>
+                          </div>
+                        </div>
+                    {% if forloop.last %}
+                      </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                    {% for post in Blog|slice:"3:6" %}
+                    {% if forloop.first %}
+                        <div class="carousel-item">
+                          <div class="row text-center">
+                    {% endif %}
+                        <div class="col-4">
+                          <div class="card mb-5">
+                            <a href="{% url 'blogpost' post.slug %}">
+                            <img class="card-img-top" src="{{post.image.url}}" height="200px"/>
+                            <div class="card-body">
+                              <h3 class="title">{{post.title}}</h3>
+                              <p class="card-text text-muted">By {{post.author}} on {{post.created | date:'F j, Y'}}</p>
+                            </div>
+                            </a>
+                          </div>
+                        </div>
+                    {% if forloop.last %}
+                      </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                    {% for post in Blog|slice:"6:9" %}
+                    {% if forloop.first %}
+                        <div class="carousel-item">
+                          <div class="row text-center">
+                    {% endif %}
+                        <div class="col-4">
+                          <div class="card mb-5">
+                            <a href="{% url 'blogpost' post.slug %}">
+                            <img class="card-img-top" src="{{post.image.url}}" height="200px"/>
+                            <div class="card-body">
+                              <h3 class="title">{{post.title}}</h3>
+                              <p class="card-text text-muted">By {{post.author}} on {{post.created | date:'F j, Y'}}</p>
+                            </div>
+                            </a>
+                          </div>
+                        </div>
+                    {% if forloop.last %}
+                      </div>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                  </div>
+                  <a class="carousel-control-prev" href="#recent-carousel" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                  </a>
+                  <a class="carousel-control-next" href="#recent-carousel" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+            {% endif %}
+
+
+
+            {% if Vlog %}
+            <div class="container mb-3 mt-3" style="padding:0;">
+                <h2 class="mb-4">Vlog</h2>
+            </div>
+              <div class="container mx-auto">
+                <div class="row">
+                  <div id="vlog-carousel" class="carousel slide" data-ride="carousel" style="width:100%;">
+                    <ol class="carousel-indicators">
+                      <li data-target="#vlog-carousel" data-slide-to="0" class="active"></li>
+                      <li data-target="#vlog-carousel" data-slide-to="1"></li>
+                      <li data-target="#vlog-carousel" data-slide-to="2"></li>
+                    </ol>
+                    <div class="carousel-inner" style="width:100%;">
+                      {% for post in Vlog|slice:":3" %}
+                      {% if forloop.first %}
+                          <div class="carousel-item active">
+                            <div class="row text-center">
+                      {% endif %}
+                          <div class="col-4">
+                            <div class="card mb-5">
+                              <a href="{% url 'vlogpost' post.slug %}">
+                              <img class="card-img-top" src="{{post.image.url}}" height="200px"/>
+                              <div class="card-body">
+                                <h3 class="title">{{post.title}}</h3>
+                                <p class="card-text text-muted">By {{post.author}} on {{post.created | date:'F j, Y'}}</p>
+                              </div>
+                              </a>
+                            </div>
+                          </div>
+                      {% if forloop.last %}
+                        </div>
+                      </div>
+                      {% endif %}
+                      {% endfor %}
+                      {% for post in Vlog|slice:"3:6" %}
+                      {% if forloop.first %}
+                          <div class="carousel-item">
+                            <div class="row text-center">
+                      {% endif %}
+                          <div class="col-4">
+                            <div class="card mb-5">
+                              <a href="{% url 'blogpost' post.slug %}">
+                              <img class="card-img-top" src="{{post.image.url}}" height="200px"/>
+                              <div class="card-body">
+                                <h3 class="title">{{post.title}}</h3>
+                                <p class="card-text text-muted">By {{post.author}} on {{post.created | date:'F j, Y'}}</p>
+                              </div>
+                              </a>
+                            </div>
+                          </div>
+                      {% if forloop.last %}
+                        </div>
+                      </div>
+                      {% endif %}
+                      {% endfor %}
+                      {% for post in Vlog|slice:"6:9" %}
+                      {% if forloop.first %}
+                          <div class="carousel-item">
+                            <div class="row text-center">
+                      {% endif %}
+                          <div class="col-4">
+                            <div class="card mb-5">
+                              <a href="{% url 'blogpost' post.slug %}">
+                              <img class="card-img-top" src="{{post.image.url}}" height="200px"/>
+                              <div class="card-body">
+                                <h3 class="title">{{post.title}}</h3>
+                                <p class="card-text text-muted">By {{post.author}} on {{post.created | date:'F j, Y'}}</p>
+                              </div>
+                              </a>
+                            </div>
+                          </div>
+                      {% if forloop.last %}
+                        </div>
+                      </div>
+                      {% endif %}
+                      {% endfor %}
+                    </div>
+                    <a class="carousel-control-prev" href="#recent-carousel" role="button" data-slide="prev">
+                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                      <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#recent-carousel" role="button" data-slide="next">
+                      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                      <span class="sr-only">Next</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+              {% endif %}
+    </div>
+    <!--End Center Column-->
+    <!--Empty Left Column To Adjust Content Towards Center-->
+
+  <div class="col-md-2" style="border-left: 1px solid grey;padding-right:0px;margin-right:0px;">
+  </div>
+  </div>
+
+{% endblock %}

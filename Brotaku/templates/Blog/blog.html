@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+  .container{
+    background-color:white;
+  }
+  h1,h2,h3,h4,h5,h6{
+    font-family:'Anton';
+  }
+  p{
+    font-family:'Roboto';
+  }
+</style>
+</head>
+<body>
+  {% block navbar %}
+    {% include 'nav.html' %}
+  {% endblock %}
+  <div class="container" style="padding-top:100px;border-left:1px solid grey;border-right:1px solid grey;">
+    <h1 class="text-center mb-2 pt-3">Blog</h1>
+    <div class="col-10 mx-auto">
+      {% for post in page_obj %}
+        <div class="card mb-3 pt-3 pr-3 pl-3 pb-3" style="width:100%; border:0; border-bottom:1px solid grey;border-radius:0;">
+          <img src="{{post.image.url}}" alt="" class="" style="width:100%;height:300px; ">
+          <h2 class="text-left pt-2">{{post.title}}</h2>
+          <p style="margin-bottom:0;">{{post.body| safe | slice:":500"}}...<br><a href="{%url 'blogpost' post.slug%}" style="font-size:0.8em;">Read More >></a></p>
+          <div style="overflow:hidden;">
+            <p class="float-left"><a class="author">{{post.author}}</a></p><p class="float-right text-muted">{{post.created}}</p>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+    <div class="pb-4 pt-3 pagination justify-content-center">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+  </div>
+{% endblock %}

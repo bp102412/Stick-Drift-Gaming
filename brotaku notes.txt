@@ -1,0 +1,11 @@
+Top story
+
+Side Bar -- Trending
+
+Recent, horizontal scroll
+
+Blog, horizontal scroll
+
+Vlog, horizontal scroll
+
+Notifications button, animate fill?

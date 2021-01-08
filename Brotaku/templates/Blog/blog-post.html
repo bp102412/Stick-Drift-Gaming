@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% block content %}
+{% load crispy_forms_tags %}
+<style>
+  h1,h2,h3,h4,h5,h6{
+    font-family:'Anton';
+  }
+  p{
+    font-family:'Roboto';
+  }
+</style>
+</head>
+<body>
+  {% block navbar %}
+    {% include 'nav.html' %}
+  {% endblock %}
+  <div class="container" style="padding:0;margin-top:110px;margin-bottom:20px;background-color:white;">
+    <img src="{{post.image.url}}" alt="" class="float-right" style="width:100%; height:350px;">
+  <div style="padding-left:15px;padding-right:15px;">
+  <h1 class="mb-3">{{post.title}}</h1>
+
+    <p>
+      {{post.body | safe}}
+    </p>
+    <!-- LIKES -->
+  {% if user.is_authenticated %}
+  {% if post.type == "Blog"%}
+  <form action="{% url 'bloglike' post.slug %}" method="POST" style="clear:both;">
+  {% elif post.type == "Vlog" %}
+  <form action="{% url 'vloglike' post.slug %}" method="POST" style="clear:both;">
+  {% endif %}
+      {% csrf_token %}
+
+      {% if liked %}
+      <button type="submit" name="blogpost_id" value="{{object.id}}" class="btn btn-info">Unlike</button>
+      {% else %}
+      <button type="submit" name="blogpost_id" value="{{object.id}}" class="btn btn-info">Like</button>
+      {% endif %}
+    </form>
+  {% else %}
+  <div class="" style="clear:both;">
+    <a class="btn btn-outline-info" href="/admin/login/?next=/blog/article/{{post.slug}}" style="clear:both;">Log in to like this article!</a><br>
+  </div>
+  {% endif %}
+  <strong class="text-secondary">{{ likes }} Like{{ likes|pluralize }}</strong>
+  {% for comment in comments %}
+        <div class="comments mt-5" style="padding: 0px;">
+          <p class="font-weight-bold">
+            {{ comment.author }}
+            <span class=" text-muted font-weight-normal">
+              {{ comment.date }}
+            </span>
+          </p>
+          {{ comment.body | linebreaks }}
+        </div>
+        {% endfor %}
+        {% if user.is_authenticated %}
+        <div class="card mt-3 mb-3" style="margin:0; padding:0;clear:both;">
+           <div class="card-body">
+           {% if new_comment %}
+           <div class="alert alert-success" role="alert">
+             Your comment is awaiting moderation
+           </div>
+           {% endif %}
+           <h3>Leave a comment</h3>
+           <form method="post" style="margin-top: 1.3em;">
+             {{ comment_form | crispy }}
+             {% csrf_token %}
+             <button type="submit" class="btn btn-primary  btn-lg">Submit</button>
+           </form>
+
+         </div>
+       </div>
+       {% endif %}
+     </div>
+     </div>
+{% endblock %}

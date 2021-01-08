@@ -1,0 +1,13 @@
+Mood: This page should have a professional and serious feeling about it, since the intended audience is potential employers.
+
+Color Pallete: Mostly whites, grays, and is mostly monochrome. Some other colors are used as a descriptor of the information displayed or as an eye catcher.
+
+Color Moods: White and Grey is meant to not distract the viewers from the main content on the page. All of the other colors are used to bring your eyes towards the important content (the image links, button links, etc)
+
+Contrast Elements: As previously mentioned, the pictures have color to focus your attention there.  The buttons have color to bring them to your attention. And the skill set in the resume has color because these colors are used as a descriptor.
+
+Site Competitors: I feel like due to the purpose of this site, there aren't competitors per se? There are other portfolios out there, but I didn't compare and contrast to them when making my design decisions
+
+Logo: Unneeded.
+
+Primary Images: Image for each language, framework, project, and of self. A few example images have been attached.

@@ -1,0 +1,89 @@
+{% block navbar %}
+<!--Full Width-->
+<div class="col-md-12 no-margin">
+<!--Navigation-->
+<nav class="navbar navbar-expand-lg fixed-top" style="background:linear-gradient(to right, rgb(0,0,0), rgb(147,39,143))">
+  <!--Empty Left Column To Adjust Content Towards Center-->
+  <div class="col-md-2">
+  </div>
+  <!--End Left Column-->
+  <!--Center Column W/ NavBar Content-->
+  <div class="col-md-8 navbar navbar-expand-lg">
+    <!--Brand and Hamburger-->
+    <a class="navbar-brand" href="/" style="display:inline;">Navbar</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <!--End Brand and Hamburger-->
+    <!--Navigation Items/Links!-->
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item active">
+          <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Blog
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <a class="dropdown-item" href="{% url 'blog' %}">All Posts</a>
+            <a class="dropdown-item" href="#">Most Recent Title</a>
+            <a class="dropdown-item" href="#">2nd Most Recent Title</a>
+            <a class="dropdown-item" href="#">3rd Most Recent Title</a>
+            <a class="dropdown-item" href="#">4th Most Recent Title</a>
+            <a class="dropdown-item" href="#">5th Most Recent Title</a>
+          </div>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Vlog
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <a class="dropdown-item" href="{% url 'vlog' %}">All Posts</a>
+            <a class="dropdown-item" href="#">Most Recent Title</a>
+            <a class="dropdown-item" href="#">2nd Most Recent Title</a>
+            <a class="dropdown-item" href="#">3rd Most Recent Title</a>
+            <a class="dropdown-item" href="#">4th Most Recent Title</a>
+            <a class="dropdown-item" href="#">5th Most Recent Title</a>
+          </div>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Reviews
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <a class="dropdown-item" href="">All Posts</a>
+            <a class="dropdown-item" href="#">Most Recent Title</a>
+            <a class="dropdown-item" href="#">2nd Most Recent Title</a>
+            <a class="dropdown-item" href="#">3rd Most Recent Title</a>
+            <a class="dropdown-item" href="#">4th Most Recent Title</a>
+            <a class="dropdown-item" href="#">5th Most Recent Title</a>
+          </div>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          News
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <a class="dropdown-item" href="">All Posts</a>
+            <a class="dropdown-item" href="#">Most Recent Title</a>
+            <a class="dropdown-item" href="#">2nd Most Recent Title</a>
+            <a class="dropdown-item" href="#">3rd Most Recent Title</a>
+            <a class="dropdown-item" href="#">4th Most Recent Title</a>
+            <a class="dropdown-item" href="#">5th Most Recent Title</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <!--End Navigation Items/Links-->
+  </div>
+  <!--End Center Column-->
+  <!--Empty Right Column To Adjust Content Towards Center-->
+  <div class="col-md-2">
+  </div>
+  <!--End Right Column-->
+</nav>
+<!--End Navigation-->
+</div>
+<!--End Full Width-->
+{% endblock %}

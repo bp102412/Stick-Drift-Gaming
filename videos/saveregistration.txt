@@ -1,0 +1,183 @@
+	/************************************
+	* Function: saveRegistration
+	* Purpose: Update information in registrations if action is passed, otherwise insert new information
+	* Input: array of registration info
+	* Output: none
+	************************************/	
+	function saveRegistration($array, $files)
+	{
+		//don't worry about it if there weren't files put in
+		if (isset($_FILES['userfile']))
+		{
+			$myFile = $_FILES['userfile'];
+			$fileCount = count($myFile['name']);
+			$filenames = "";
+			
+			//array of allowed extensions (only image files)
+			$allowedExts = array("jpg", "jpeg", "gif", "png");
+			
+			//create array of allowed types
+			$allowedTypes = array("image/gif", "image/jpeg", "image/png", "image/pjpeg");
+			
+			for ($i=0; $i<$fileCount; $i++){
+				//process file if there's no error	
+				if ($myFile['error'][$i]==0){	 	
+					//Pull extension from uploads
+					$extension = @end(explode(".", $myFile["name"][$i]));
+					
+					//just make life a bit harder with max file sizes
+					if (($myFile['size'][$i] < 2000000) && in_array($extension, $allowedExts) && in_array($myFile['type'][$i], $allowedTypes)){
+						$genFilename = time().$myFile['name'][$i];
+						
+						
+						if (!file_exists("uploads/$genFilename")){
+							//file resizing stuff
+							switch(strtolower($extension)){
+								case 'jpg':
+									//just redirects to 'jpeg' case
+								case 'jpeg':
+									$sourceImage = imagecreatefromjpeg($myFile['tmp_name'][$i]);
+									break;
+								case 'gif':
+									$sourceImage = imagecreatefromgif($myFile['tmp_name'][$i]);
+									break;
+								case 'png':
+									$sourceImage = imagecreatefrompng($myFile['tmp_name'][$i]);
+									break;
+							}
+							
+							$sourceWidth = imagesx($sourceImage);
+							$sourceHeight = imagesy($sourceImage);
+							$ratio = $sourceHeight/$sourceWidth;
+							
+							//set destination size based on original properties
+							$destWidth = 1000;
+							$destHeight = 1000*$ratio;
+							
+							
+							//only resize if file is wider than desired 800 px
+							if ($sourceWidth > $destWidth){
+								//create blank canvas
+								$destImage  = imagecreatetruecolor($destWidth, $destHeight);
+								
+								//badda bing, badda boom
+								//old image fits in this room
+								imagecopyresampled($destImage, $sourceImage, 0, 0, 0, 0, $destWidth, $destHeight, $sourceWidth, $sourceHeight);
+								
+								
+								
+								//put original image into the new one with the same extension
+								switch(strtolower($extension)){
+									case 'jpg':
+										//just redirects to 'jpeg' case
+									case 'jpeg':
+										imagejpeg($destImage, "uploads/$genFilename");
+										break;
+									case 'gif':
+										imagegif($destImage, "uploads/$genFilename");
+										break;
+									case 'png':
+										imagepng($destImage, "uploads/$genFilename");
+										break;
+								}
+							
+							}else{
+								move_uploaded_file($myFile['tmp_name'][$i], "uploads/$genFilename");
+							}
+							
+							$filenames .=$genFilename ."|";
+						}
+					}//end if (filesize)
+				}//end if (myFile[error])
+			}//end for
+		}//end if
+		
+		
+		
+		//update if id exists, else insert
+		//THIS WILL BE WHERE THERE'S A PROBLEM IF ONE EXISTS, ORIGINAL CODE HERE WAS
+		// if (isset($array['id']))
+		if (!empty($array['id'])){
+			$sql = "UPDATE registrations SET name=?, assocName=?, businessName=?, email=?, address=?, city=?, state=?, zip=?, phone=?, mobilePhone=?, taxID=?, crafts=?, performing=? WHERE id=?";
+			
+			if($stmt = $GLOBALS['conn']->prepare($sql))
+			{
+				$stmt->bind_param("sssssssiiiissi", $name, $assocName, $businessName, $email, $address, $city, $state, $zip, $phone, $mobilePhone, $taxID, $crafts, $performing, $id);
+				$id = $array['id'];
+			}
+		}else{
+			$sql = "INSERT INTO registrations (name, assocName, businessName, email, address, city, state, zip, phone, mobilePhone, taxID, crafts, performing, regdate, images) VALUES
+				('".$array['name']."','".$array['assocName']."','".$array['businessName']."','".$array['email']."','".$array['address']."','".$array['city']."','".$array['state']."','".$array['zip']."','".$array['phone']."','".$array['mobilePhone']."','".$array['taxID']."','".$array['crafts']."','".$array['performing']."','".time() ."','" .$filenames ."')"; 
+			
+			if($stmt = $GLOBALS['conn']->prepare($sql))
+			{
+				$stmt->bind_param("sssssssiiiissis", $name, $assocName, $businessName, $email, $address, $city, $state, $zip, $phone, $mobilePhone, $taxID, $crafts, $performing, $regdate, $files);
+			}
+		}
+	
+
+	
+		$name = $array['name'];
+		$assocName = $array['assocName'];
+		$businessName = $array['businessName'];
+		$email = $array['email'];
+		$address = $array['address'];
+		$city = $array['city'];
+		$state = $array['state'];
+		$zip = $array['zip'];
+		$phone = $array['phone'];
+		$mobilePhone = $array['mobilePhone'];
+		$taxID = $array['taxID'];
+		$crafts = $array['crafts'];
+		$performing = $array['performing'];
+		$regdate = time();
+		$files = $filenames;
+		
+		
+		$stmt->execute();
+		$stmt->close();
+
+		
+		//email when submitted
+/* 		if(mysqli_stmt_execute($stmt)){
+			echo "<div class=\"container\"><h1 class=\"text-center mt-3\">Your submission has been received. Thank you.</h1></div>";
+			$message = '
+				<html>
+				<head>
+				<title>
+				Submission Confirmation
+				</title>
+				</head>
+				<body>
+				<h1>
+				Thank you for your submission. You can review it below:
+				</h1>
+				<table>
+				<tr>
+				<th>Name</th><th>Asociate Name</th><th>Business Name</th><th>Email Address</th><th>Address</th><th>City</th><th>State</th><th>Zip</th><th>Main Phone</th><th>Cell Phone</th><th>Tax Number</th><th>Performing</th><th>Registration Date</th>
+				</tr>
+				<tr>
+				<td>' . $name . '</td><td>' . $assocName . '</td><td>' . $business . '</td><td>' . $email . '</td><td>' . $address . '</td><td>' . $city . '</td><td>' . $state . '</td><td>' . $zip . '</td>
+				<td>' . $phone . '</td><td>' . $mobilePhone . '</td><td>' . $taxID . '</td><td>' . $performing . '</td><td>' . date("n/j/y g:ia", $regdate) . '</td>
+				</tr>
+				</table>
+				</body>
+				</html>';
+			$headers = "MIME-Version: 1.0" . "\r\n";
+			$headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
+			$toSelf="mcnerca17@juniata.edu";
+			$subject = "Submission Confirmation";
+			mail($toSelf,$subject, $message, $headers);
+			mail("pheasaj@juniata.edu",$subject, $message, $headers);
+		} */
+		
+		
+		/*
+		if ($GLOBALS['conn']->query($sql) === TRUE)
+		{
+			echo "<p>Database updated successfully</p>";
+		}else{
+			echo "<p>Error executing query:" .$GLOBALS['conn']->error ."</p>";
+		}
+		*/
+	}
